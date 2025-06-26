@@ -1,0 +1,53 @@
+[theme]
+# Primary colors for futuristic theme
+primaryColor = "#00bcd4"
+backgroundColor = "#0c1445"
+secondaryBackgroundColor = "#1a237e"
+textColor = "#ffffff"
+font = "sans serif"
+
+[server]
+# Server configuration
+headless = true
+port = 8501
+baseUrlPath = ""
+enableCORS = false
+enableXsrfProtection = true
+maxUploadSize = 200
+maxMessageSize = 200
+enableWebsocketCompression = false
+
+[browser]
+# Browser settings
+serverAddress = "localhost"
+gatherUsageStats = false
+showErrorDetails = true
+
+[logger]
+# Logging configuration
+level = "info"
+messageFormat = "%(asctime)s %(levelname) -7s %(name)s: %(message)s"
+
+[client]
+# Client configuration
+caching = true
+displayEnabled = true
+showErrorDetails = true
+
+[runner]
+# Runner configuration
+magicEnabled = true
+installTracer = false
+fixMatplotlib = true
+postScriptGC = true
+fastReruns = true
+enforceSerializableSessionState = true
+
+[mapbox]
+# Mapbox configuration (if using maps)
+token = ""
+
+[deprecation]
+# Deprecation warnings
+showPyplotGlobalUse = false
+showfileUploaderEncoding = false

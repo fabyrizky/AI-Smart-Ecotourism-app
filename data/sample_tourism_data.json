@@ -1,0 +1,337 @@
+{
+  "educational_tourism_locations": [
+    {
+      "id": "loc_001",
+      "name": "Borobudur Temple Complex",
+      "type": "Cultural Heritage",
+      "province": "Central Java",
+      "coordinates": {
+        "latitude": -7.6079,
+        "longitude": 110.2038
+      },
+      "sustainability_metrics": {
+        "carbon_footprint_per_visitor": 1.2,
+        "renewable_energy_percentage": 65,
+        "waste_recycling_rate": 78,
+        "water_conservation_score": 8.3,
+        "local_employment_percentage": 85
+      },
+      "educational_programs": [
+        {
+          "name": "Buddhist Heritage Discovery",
+          "duration_hours": 4,
+          "max_participants": 25,
+          "learning_outcomes": [
+            "Understanding of Buddhist philosophy",
+            "Archaeological excavation techniques",
+            "Stone carving traditions"
+          ]
+        },
+        {
+          "name": "Sustainable Tourism Workshop",
+          "duration_hours": 6,
+          "max_participants": 20,
+          "learning_outcomes": [
+            "Tourism impact assessment",
+            "Community engagement strategies",
+            "Heritage conservation methods"
+          ]
+        }
+      ],
+      "visitor_statistics": {
+        "monthly_average": 28500,
+        "satisfaction_score": 8.7,
+        "repeat_visitor_rate": 0.42,
+        "international_percentage": 0.68
+      },
+      "sustainability_initiatives": [
+        "Solar panel installation covering 40% of energy needs",
+        "Rainwater harvesting system",
+        "Community-based waste management",
+        "Local artisan empowerment program",
+        "Digital ticketing to reduce paper waste"
+      ],
+      "marketing_strategies": [
+        {
+          "strategy": "Digital Heritage Storytelling",
+          "effectiveness_score": 8.9,
+          "target_audience": "Cultural enthusiasts, educators",
+          "channels": ["Social media", "Educational partnerships", "VR experiences"]
+        },
+        {
+          "strategy": "Sustainable Tourism Certification",
+          "effectiveness_score": 9.2,
+          "target_audience": "Eco-conscious travelers",
+          "channels": ["Green tourism platforms", "Sustainability websites"]
+        }
+      ]
+    },
+    {
+      "id": "loc_002",
+      "name": "Komodo National Park",
+      "type": "Wildlife Conservation",
+      "province": "East Nusa Tenggara",
+      "coordinates": {
+        "latitude": -8.5833,
+        "longitude": 119.4500
+      },
+      "sustainability_metrics": {
+        "carbon_footprint_per_visitor": 0.8,
+        "renewable_energy_percentage": 45,
+        "waste_recycling_rate": 95,
+        "water_conservation_score": 9.1,
+        "local_employment_percentage": 92
+      },
+      "educational_programs": [
+        {
+          "name": "Dragon Research Participation",
+          "duration_hours": 8,
+          "max_participants": 15,
+          "learning_outcomes": [
+            "Wildlife research methodologies",
+            "Conservation biology principles",
+            "Endemic species protection"
+          ]
+        },
+        {
+          "name": "Marine Conservation Workshop",
+          "duration_hours": 12,
+          "max_participants": 18,
+          "learning_outcomes": [
+            "Coral reef ecosystem understanding",
+            "Marine biodiversity assessment",
+            "Sustainable fishing practices"
+          ]
+        }
+      ],
+      "visitor_statistics": {
+        "monthly_average": 8200,
+        "satisfaction_score": 9.3,
+        "repeat_visitor_rate": 0.35,
+        "international_percentage": 0.85
+      },
+      "sustainability_initiatives": [
+        "Zero plastic waste policy",
+        "Wind and solar hybrid energy system",
+        "Local fishing community partnerships",
+        "Marine protected area expansion",
+        "Visitor carbon offset program"
+      ],
+      "marketing_strategies": [
+        {
+          "strategy": "Wildlife Conservation Education",
+          "effectiveness_score": 9.5,
+          "target_audience": "Nature lovers, researchers",
+          "channels": ["Wildlife documentaries", "Research publications", "Eco-tours"]
+        },
+        {
+          "strategy": "Adventure Eco-Tourism",
+          "effectiveness_score": 8.8,
+          "target_audience": "Adventure seekers",
+          "channels": ["Adventure travel platforms", "Diving communities"]
+        }
+      ]
+    },
+    {
+      "id": "loc_003",
+      "name": "Ubud Traditional Rice Terraces",
+      "type": "Agricultural Heritage",
+      "province": "Bali",
+      "coordinates": {
+        "latitude": -8.5069,
+        "longitude": 115.2625
+      },
+      "sustainability_metrics": {
+        "carbon_footprint_per_visitor": 0.4,
+        "renewable_energy_percentage": 80,
+        "waste_recycling_rate": 88,
+        "water_conservation_score": 9.5,
+        "local_employment_percentage": 95
+      },
+      "educational_programs": [
+        {
+          "name": "Sustainable Agriculture Learning",
+          "duration_hours": 6,
+          "max_participants": 30,
+          "learning_outcomes": [
+            "Traditional farming techniques",
+            "Organic agriculture principles",
+            "Water management systems"
+          ]
+        },
+        {
+          "name": "Cultural Immersion Experience",
+          "duration_hours": 10,
+          "max_participants": 20,
+          "learning_outcomes": [
+            "Balinese cultural traditions",
+            "Community cooperation (Gotong Royong)",
+            "Spiritual relationship with nature"
+          ]
+        }
+      ],
+      "visitor_statistics": {
+        "monthly_average": 15600,
+        "satisfaction_score": 9.1,
+        "repeat_visitor_rate": 0.48,
+        "international_percentage": 0.72
+      },
+      "sustainability_initiatives": [
+        "100% organic farming certification",
+        "Traditional water management (Subak) preservation",
+        "Community-owned eco-lodges",
+        "Zero-waste cooking classes",
+        "Carbon-negative agriculture practices"
+      ],
+      "marketing_strategies": [
+        {
+          "strategy": "Authentic Cultural Experiences",
+          "effectiveness_score": 9.4,
+          "target_audience": "Cultural immersion seekers",
+          "channels": ["Cultural tourism platforms", "Wellness retreats"]
+        },
+        {
+          "strategy": "Farm-to-Table Sustainability",
+          "effectiveness_score": 8.9,
+          "target_audience": "Food enthusiasts, sustainability advocates",
+          "channels": ["Culinary tourism", "Sustainable living blogs"]
+        }
+      ]
+    }
+  ],
+  "market_trends": [
+    {
+      "trend_id": "trend_001",
+      "name": "AI-Powered Personalization",
+      "category": "Technology",
+      "adoption_rate": 0.35,
+      "growth_projection_2025": 0.78,
+      "impact_on_education_tourism": "High",
+      "description": "Artificial intelligence enables personalized learning paths and customized tourism experiences based on visitor preferences and learning styles.",
+      "implementation_examples": [
+        "Adaptive learning platforms for cultural education",
+        "Personalized itinerary recommendations",
+        "Real-time language translation services",
+        "Customized sustainability impact reports"
+      ]
+    },
+    {
+      "trend_id": "trend_002",
+      "name": "Blockchain Sustainability Verification",
+      "category": "Sustainability",
+      "adoption_rate": 0.18,
+      "growth_projection_2025": 0.65,
+      "impact_on_education_tourism": "Medium",
+      "description": "Blockchain technology provides transparent and verifiable sustainability claims and carbon offset tracking.",
+      "implementation_examples": [
+        "Verified carbon neutral certifications",
+        "Transparent supply chain tracking",
+        "Immutable sustainability reporting",
+        "Decentralized community funding"
+      ]
+    },
+    {
+      "trend_id": "trend_003",
+      "name": "Virtual Reality Learning Experiences",
+      "category": "Education Technology",
+      "adoption_rate": 0.28,
+      "growth_projection_2025": 0.72,
+      "impact_on_education_tourism": "High",
+      "description": "VR/AR technologies create immersive educational experiences that complement physical visits and enable remote learning.",
+      "implementation_examples": [
+        "Virtual heritage site reconstructions",
+        "Immersive historical simulations",
+        "Remote field trip experiences",
+        "Interactive cultural workshops"
+      ]
+    }
+  ],
+  "sustainability_benchmarks": {
+    "carbon_neutrality": {
+      "excellent": "< 0.5 kg CO2/visitor",
+      "good": "0.5 - 1.0 kg CO2/visitor",
+      "average": "1.0 - 2.0 kg CO2/visitor",
+      "needs_improvement": "> 2.0 kg CO2/visitor"
+    },
+    "renewable_energy": {
+      "excellent": "> 80%",
+      "good": "60% - 80%",
+      "average": "40% - 60%",
+      "needs_improvement": "< 40%"
+    },
+    "waste_management": {
+      "excellent": "> 90% recycled/composted",
+      "good": "70% - 90%",
+      "average": "50% - 70%",
+      "needs_improvement": "< 50%"
+    },
+    "local_engagement": {
+      "excellent": "> 85% local employment",
+      "good": "70% - 85%",
+      "average": "50% - 70%",
+      "needs_improvement": "< 50%"
+    }
+  },
+  "educational_frameworks": [
+    {
+      "framework_name": "UNESCO Education for Sustainable Development",
+      "principles": [
+        "Interdisciplinary learning",
+        "Critical thinking development",
+        "Participatory learning",
+        "Local-global connections",
+        "Future-oriented thinking"
+      ],
+      "application_in_tourism": "Integration of sustainability principles in all tourism education programs"
+    },
+    {
+      "framework_name": "Experiential Learning Theory",
+      "principles": [
+        "Concrete experience",
+        "Reflective observation",
+        "Abstract conceptualization",
+        "Active experimentation"
+      ],
+      "application_in_tourism": "Hands-on tourism activities followed by reflection and application"
+    }
+  ],
+  "competitive_analysis": {
+    "direct_competitors": [
+      {
+        "name": "EcoTourism Analytics Platform",
+        "strengths": ["Established market presence", "Strong partnerships"],
+        "weaknesses": ["Limited AI capabilities", "Outdated user interface"],
+        "market_share": 0.15
+      },
+      {
+        "name": "GreenTravel Intelligence",
+        "strengths": ["Advanced analytics", "Mobile-first design"],
+        "weaknesses": ["High pricing", "Limited educational focus"],
+        "market_share": 0.12
+      }
+    ],
+    "indirect_competitors": [
+      {
+        "name": "Generic Tourism Analytics",
+        "market_share": 0.25,
+        "differentiation_opportunity": "Sustainability focus and educational integration"
+      }
+    ]
+  },
+  "roi_projections": {
+    "implementation_costs": {
+      "initial_setup": 50000,
+      "annual_maintenance": 15000,
+      "staff_training": 8000,
+      "technology_upgrades": 12000
+    },
+    "expected_benefits": {
+      "visitor_satisfaction_increase": 0.20,
+      "operational_efficiency_gain": 0.25,
+      "marketing_effectiveness_improvement": 0.35,
+      "sustainability_cost_savings": 0.15
+    },
+    "payback_period_months": 18,
+    "five_year_roi": 3.2
+  }
+}
