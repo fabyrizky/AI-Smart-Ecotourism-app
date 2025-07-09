@@ -3,10 +3,7 @@ primaryColor = "#00ff88"
 backgroundColor = "#001a0f"
 secondaryBackgroundColor = "#002d1a"
 textColor = "#ffffff"
-font = "sans serif"
 
 [server]
 headless = true
-port = 8501
 enableCORS = false
-maxUploadSize = 200
