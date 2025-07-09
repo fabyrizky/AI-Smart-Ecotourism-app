@@ -6,7 +6,6 @@ import plotly.graph_objects as go
 import requests
 import random
 from datetime import datetime, timedelta
-from PIL import Image
 import json
 import os
 
@@ -17,7 +16,7 @@ st.set_page_config(
     layout="wide"
 )
 
-# Enhanced CSS (Optimized)
+# Optimized CSS
 st.markdown("""
 <style>
     @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap');
@@ -29,9 +28,9 @@ st.markdown("""
     
     .main-title {
         font-family: 'Orbitron', monospace;
-        font-size: 3rem;
+        font-size: 2.8rem;
         text-align: center;
-        margin: 2rem 0;
+        margin: 1.5rem 0;
         color: #00ff88;
         text-shadow: 0 0 20px #00ff88;
         animation: glow 2s ease-in-out infinite alternate;
@@ -44,51 +43,49 @@ st.markdown("""
     
     .subtitle {
         font-family: 'Orbitron', monospace;
-        font-size: 1.2rem;
+        font-size: 1.1rem;
         text-align: center;
         color: #66ff99;
-        margin-bottom: 2rem;
+        margin-bottom: 1.5rem;
     }
     
     .metric-card {
         background: linear-gradient(135deg, rgba(0, 255, 136, 0.15), rgba(102, 255, 153, 0.1));
-        border: 2px solid #66ff99;
-        border-radius: 15px;
-        padding: 1.5rem;
-        margin: 1rem 0;
+        border: 1px solid #66ff99;
+        border-radius: 10px;
+        padding: 1rem;
+        margin: 0.5rem 0;
         transition: all 0.3s ease;
-        box-shadow: 0 0 15px rgba(0, 255, 136, 0.3);
+        box-shadow: 0 0 10px rgba(0, 255, 136, 0.2);
     }
     
     .metric-card:hover {
-        transform: translateY(-3px);
-        box-shadow: 0 5px 25px rgba(0, 255, 136, 0.5);
+        transform: translateY(-2px);
+        box-shadow: 0 3px 15px rgba(0, 255, 136, 0.4);
     }
     
     .stButton > button {
-        background: linear-gradient(45deg, rgba(0, 255, 136, 0.3), rgba(102, 255, 153, 0.2));
+        background: linear-gradient(45deg, rgba(0, 255, 136, 0.25), rgba(102, 255, 153, 0.15));
         color: #66ff99;
-        border: 2px solid #66ff99;
-        border-radius: 25px;
-        padding: 0.7rem 2rem;
+        border: 1px solid #66ff99;
+        border-radius: 20px;
+        padding: 0.5rem 1.5rem;
         font-family: 'Orbitron', monospace;
-        font-weight: 600;
         transition: all 0.3s ease;
     }
     
     .stButton > button:hover {
-        background: linear-gradient(45deg, rgba(0, 255, 136, 0.5), rgba(102, 255, 153, 0.3));
-        box-shadow: 0 0 20px rgba(0, 255, 136, 0.6);
-        transform: translateY(-2px);
+        background: linear-gradient(45deg, rgba(0, 255, 136, 0.4), rgba(102, 255, 153, 0.25));
+        box-shadow: 0 0 15px rgba(0, 255, 136, 0.5);
+        transform: translateY(-1px);
     }
     
     .analysis-box {
-        background: linear-gradient(135deg, rgba(0, 255, 136, 0.1), rgba(102, 255, 153, 0.08));
+        background: linear-gradient(135deg, rgba(0, 255, 136, 0.08), rgba(102, 255, 153, 0.05));
         border: 1px solid #66ff99;
-        border-radius: 15px;
-        padding: 1.5rem;
-        margin: 1rem 0;
-        box-shadow: 0 0 10px rgba(0, 255, 136, 0.2);
+        border-radius: 10px;
+        padding: 1rem;
+        margin: 0.5rem 0;
     }
     
     h1, h2, h3, h4, h5, h6 {
@@ -97,111 +94,96 @@ st.markdown("""
     }
     
     [data-testid="metric-container"] {
-        background: rgba(0, 255, 136, 0.1);
+        background: rgba(0, 255, 136, 0.08);
         border: 1px solid #66ff99;
-        padding: 1rem;
-        border-radius: 10px;
+        padding: 0.5rem;
+        border-radius: 8px;
     }
 </style>
 """, unsafe_allow_html=True)
 
-# API Configuration
-@st.cache_data
+# Safe API Configuration
 def get_api_config():
-    """Get API configuration from secrets or environment"""
+    """Get API configuration safely"""
     try:
-        # Try Streamlit secrets first
-        api_key = st.secrets["api"]["openrouter_api_key"]
-        model = st.secrets["api"]["openrouter_model"]
-        base_url = st.secrets["api"]["openrouter_base_url"]
+        if hasattr(st, 'secrets') and 'api' in st.secrets:
+            return {
+                "api_key": st.secrets["api"]["openrouter_api_key"],
+                "model": st.secrets["api"]["openrouter_model"],
+                "base_url": st.secrets["api"]["openrouter_base_url"]
+            }
     except:
-        # Fallback to environment variables or defaults
-        api_key = os.getenv("OPENROUTER_API_KEY", "")
-        model = "qwen/qwq-32b:free"
-        base_url = "https://openrouter.ai/api/v1"
+        pass
     
     return {
-        "api_key": api_key,
-        "model": model,
-        "base_url": base_url
+        "api_key": os.getenv("OPENROUTER_API_KEY", ""),
+        "model": "qwen/qwq-32b:free",
+        "base_url": "https://openrouter.ai/api/v1"
     }
 
-# AI Response System
-def get_ai_response(query, use_ai=True):
-    """Smart AI responses with OpenRouter integration"""
-    if not use_ai:
-        return get_fallback_response(query)
+# Fallback Response System
+def get_response(query):
+    """Get response - AI or fallback"""
+    config = get_api_config()
     
-    try:
-        config = get_api_config()
-        
-        if not config["api_key"]:
-            return get_fallback_response(query)
-        
-        headers = {
-            "Authorization": f"Bearer {config['api_key']}",
-            "Content-Type": "application/json"
-        }
-        
-        payload = {
-            "model": config["model"],
-            "messages": [
-                {
-                    "role": "system",
-                    "content": "You are an expert in sustainable tourism and green marketing. Provide detailed, actionable insights for eco-tourism development."
-                },
-                {
-                    "role": "user",
-                    "content": f"Tourism Query: {query}\n\nProvide comprehensive analysis with specific recommendations for sustainable tourism development."
-                }
-            ],
-            "max_tokens": 500,
-            "temperature": 0.7
-        }
-        
-        response = requests.post(
-            f"{config['base_url']}/chat/completions",
-            headers=headers,
-            json=payload,
-            timeout=10
-        )
-        
-        if response.status_code == 200:
-            result = response.json()
-            return result["choices"][0]["message"]["content"]
-        else:
-            return get_fallback_response(query)
+    # Try AI first if key available
+    if config["api_key"]:
+        try:
+            headers = {
+                "Authorization": f"Bearer {config['api_key']}",
+                "Content-Type": "application/json"
+            }
             
-    except Exception as e:
-        st.error(f"AI Service temporarily unavailable: {str(e)}")
-        return get_fallback_response(query)
+            payload = {
+                "model": config["model"],
+                "messages": [
+                    {"role": "system", "content": "You are a sustainable tourism expert. Provide actionable insights."},
+                    {"role": "user", "content": f"Query: {query}"}
+                ],
+                "max_tokens": 400,
+                "temperature": 0.7
+            }
+            
+            response = requests.post(
+                f"{config['base_url']}/chat/completions",
+                headers=headers, json=payload, timeout=8
+            )
+            
+            if response.status_code == 200:
+                return response.json()["choices"][0]["message"]["content"]
+        except:
+            pass
+    
+    # Fallback responses
+    return get_fallback_response(query)
 
 def get_fallback_response(query):
-    """Fallback responses when AI is unavailable"""
+    """Smart fallback responses"""
     query_lower = query.lower()
     
-    responses = {
-        'strategy': '''🎯 **GREEN MARKETING STRATEGY FRAMEWORK**
+    if any(word in query_lower for word in ['strategy', 'marketing', 'promotion']):
+        return """🎯 **GREEN MARKETING STRATEGY**
 
 **1. Sustainable Experience Design**
-- Carbon-neutral visitor journeys
-- Local community integration programs
-- Educational impact measurement
-- Expected outcome: 35% increase in eco-conscious bookings
+- Carbon-neutral visitor journeys with offset programs
+- Local community integration and cultural immersion
+- Educational impact measurement and certification
+- Expected: 35% increase in eco-conscious bookings
 
 **2. Digital Green Certification**
-- Real-time sustainability tracking
-- Transparent impact reporting
-- Verified carbon offset programs
-- Expected outcome: 28% premium pricing opportunity
+- Real-time sustainability tracking dashboard
+- Transparent impact reporting to visitors
+- Third-party verified carbon offset programs
+- Expected: 28% premium pricing opportunity
 
 **3. Community-Powered Tourism**
-- Local guide employment initiatives
-- Cultural preservation programs
-- Revenue sharing transparency
-- Expected outcome: 65% increase in community benefits''',
+- Local guide employment and training initiatives
+- Cultural preservation and heritage programs
+- Transparent revenue sharing with communities
+- Expected: 65% increase in local community benefits"""
 
-        'sustainability': '''🌱 **COMPREHENSIVE SUSTAINABILITY ASSESSMENT**
+    elif any(word in query_lower for word in ['sustainability', 'green', 'environment']):
+        return """🌱 **SUSTAINABILITY ASSESSMENT**
 
 **Current Performance Indicators:**
 - Renewable Energy Integration: 89%
@@ -210,78 +192,68 @@ def get_fallback_response(query):
 - Overall Sustainability Score: 9.1/10
 
 **Strategic Focus Areas:**
-- AI-driven environmental monitoring
+- AI-driven environmental monitoring systems
 - Circular economy implementation
 - Biodiversity conservation programs
-- Stakeholder engagement enhancement
+- Enhanced stakeholder engagement
 
 **ROI Projections:**
 - Annual operational savings: $520,000
 - Premium market positioning: +35%
-- Visitor satisfaction improvement: +31%''',
+- Visitor satisfaction improvement: +31%"""
 
-        'analytics': '''📊 **ADVANCED PERFORMANCE ANALYTICS**
+    elif any(word in query_lower for word in ['analytics', 'data', 'performance']):
+        return """📊 **PERFORMANCE ANALYTICS**
 
-**Key Performance Metrics:**
-- Visitor Satisfaction Index: 9.4/10
+**Key Metrics:**
+- Visitor Satisfaction: 9.4/10
 - Revenue Growth (YoY): +34%
 - Carbon Footprint Reduction: 42%
 - Educational Program Effectiveness: 96%
 
-**Market Position Analysis:**
+**Market Position:**
 - Sustainability Leadership: Top 2%
 - Market Share Growth: +48%
 - Brand Recognition: 91% in target segments
-- Competitive Advantage: Confirmed
 
-**Future Growth Projections:**
+**Projections:**
 - Q4 expansion forecast: +41%
-- 5-year sustainability ROI: 445%'''
-    }
-    
-    if any(word in query_lower for word in ['strategy', 'marketing', 'promotion']):
-        return responses['strategy']
-    elif any(word in query_lower for word in ['sustainability', 'green', 'environment']):
-        return responses['sustainability']
-    elif any(word in query_lower for word in ['analytics', 'data', 'performance']):
-        return responses['analytics']
+- 5-year sustainability ROI: 445%"""
+
     else:
-        return f'''🤖 **AI TOURISM INTELLIGENCE**
+        return f"""🤖 **AI TOURISM INTELLIGENCE**
 
-**Query Analysis:** "{query}"
+**Analysis for:** "{query}"
 
-**Strategic Insights:**
+**Key Insights:**
 - Sustainable tourism growth: 29% annually
 - Eco-conscious traveler preference: 87%
 - AI optimization impact: +45% efficiency
-- Educational tourism potential: Highest growth sector
 
-**Actionable Recommendations:**
+**Recommendations:**
 1. Implement data-driven sustainability strategies
 2. Develop immersive educational experiences
 3. Build authentic community partnerships
-4. Leverage technology for optimization
-5. Focus on measurable impact outcomes
+4. Focus on measurable impact outcomes
 
 **Expected Benefits:**
 - Enhanced visitor engagement and loyalty
 - Improved operational sustainability
-- Strengthened market positioning
-- Increased revenue through premium offerings'''
+- Increased revenue through premium offerings"""
 
 # Simple Image Analysis
-def analyze_uploaded_image(uploaded_file):
-    """Simplified image analysis for tourism"""
+def analyze_image(uploaded_file):
+    """Basic image analysis"""
     try:
+        from PIL import Image
         image = Image.open(uploaded_file)
         width, height = image.size
         
-        # Simple analysis based on image properties
-        analysis_types = [
+        analysis_options = [
             {
-                'location_type': 'Natural Landscape',
-                'tourism_potential': random.uniform(8.0, 9.5),
-                'sustainability_score': random.uniform(8.5, 9.8),
+                'type': 'Natural Landscape',
+                'potential': random.uniform(8.0, 9.5),
+                'sustainability': random.uniform(8.5, 9.8),
                 'recommendations': [
                     'Develop eco-friendly viewing platforms',
                     'Create educational nature trails',
@@ -290,9 +262,9 @@ def analyze_uploaded_image(uploaded_file):
                 ]
             },
             {
-                'location_type': 'Cultural Heritage',
-                'tourism_potential': random.uniform(8.2, 9.3),
-                'sustainability_score': random.uniform(7.8, 9.2),
+                'type': 'Cultural Heritage',
+                'potential': random.uniform(8.2, 9.3),
+                'sustainability': random.uniform(7.8, 9.2),
                 'recommendations': [
                     'Preserve cultural authenticity',
                     'Digital heritage documentation',
@@ -301,9 +273,9 @@ def analyze_uploaded_image(uploaded_file):
                 ]
             },
             {
-                'location_type': 'Marine/Coastal',
-                'tourism_potential': random.uniform(8.7, 9.7),
-                'sustainability_score': random.uniform(8.4, 9.6),
+                'type': 'Marine/Coastal',
+                'potential': random.uniform(8.7, 9.7),
+                'sustainability': random.uniform(8.4, 9.6),
                 'recommendations': [
                     'Marine protected area development',
                     'Sustainable diving programs',
@@ -313,7 +285,7 @@ def analyze_uploaded_image(uploaded_file):
             }
         ]
         
-        selected = random.choice(analysis_types)
+        selected = random.choice(analysis_options)
         
         return {
             'success': True,
@@ -324,21 +296,16 @@ def analyze_uploaded_image(uploaded_file):
             },
             'analysis': selected
         }
-        
     except Exception as e:
-        return {
-            'success': False,
-            'error': f"Analysis failed: {str(e)}"
-        }
+        return {'success': False, 'error': str(e)}
 
 # Data Generation
 @st.cache_data
 def generate_tourism_data():
-    """Generate sample tourism data"""
+    """Generate sample data"""
     locations = [
         "Borobudur Heritage", "Komodo National Park", "Ubud Cultural Valley", 
-        "Mount Bromo Eco Zone", "Raja Ampat Marine Reserve", "Lake Toba Heritage",
-        "Tana Toraja Cultural Site", "Yogyakarta Art District"
+        "Mount Bromo Eco Zone", "Raja Ampat Marine Reserve", "Lake Toba Heritage"
     ]
     
     return pd.DataFrame({
@@ -353,15 +320,15 @@ def generate_tourism_data():
 
 @st.cache_data
 def generate_realtime_data():
-    """Generate real-time metrics"""
+    """Generate real-time data"""
     current_time = datetime.now()
     time_points = [current_time - timedelta(minutes=i) for i in range(30, 0, -1)]
     
     return pd.DataFrame({
         'timestamp': time_points,
-        'visitor_flow': [100 + 35*np.sin(i*0.2) + random.randint(-10, 10) for i in range(30)],
-        'carbon_offset': [25 + 12*np.cos(i*0.15) + random.randint(-3, 3) for i in range(30)],
-        'satisfaction': [8.5 + 0.5*np.sin(i*0.1) + random.uniform(-0.15, 0.15) for i in range(30)]
+        'visitor_flow': [100 + 30*np.sin(i*0.2) + random.randint(-8, 8) for i in range(30)],
+        'carbon_offset': [25 + 10*np.cos(i*0.15) + random.randint(-2, 2) for i in range(30)],
+        'satisfaction': [8.5 + 0.4*np.sin(i*0.1) + random.uniform(-0.1, 0.1) for i in range(30)]
     })
 
 # Main Application
@@ -373,36 +340,36 @@ def main():
     # Sidebar
     with st.sidebar:
         st.markdown("### 🎯 NAVIGATION")
-        selected_page = st.selectbox(
-            "Choose Module", 
-            ["🏠 Dashboard", "🤖 AI Chat", "📸 Image Analysis", "📊 Analytics", "🎮 Scenarios", "🌍 Sustainability"]
-        )
+        page = st.selectbox("Choose Module", [
+            "🏠 Dashboard", "🤖 AI Chat", "📸 Image Analysis", 
+            "📊 Analytics", "🎮 Scenarios", "🌍 Sustainability"
+        ])
         
         st.markdown("### 📈 LIVE STATUS")
-        st.metric("🔥 Active Sites", "12", "+3")
+        st.metric("🔥 Sites", "12", "+3")
         st.metric("👥 Users", "28K", "+19%") 
         st.metric("🌱 Score", "9.3/10", "+0.4")
         st.metric("💰 Revenue", "$85K", "+18%")
     
-    # Main Content
-    if selected_page == "🏠 Dashboard":
+    # Route to pages
+    if page == "🏠 Dashboard":
         show_dashboard()
-    elif selected_page == "🤖 AI Chat":
+    elif page == "🤖 AI Chat":
         show_ai_chat()
-    elif selected_page == "📸 Image Analysis":
+    elif page == "📸 Image Analysis":
         show_image_analysis()
-    elif selected_page == "📊 Analytics":
+    elif page == "📊 Analytics":
         show_analytics()
-    elif selected_page == "🎮 Scenarios":
+    elif page == "🎮 Scenarios":
         show_scenarios()
-    elif selected_page == "🌍 Sustainability":
+    elif page == "🌍 Sustainability":
         show_sustainability()
 
 def show_dashboard():
     """Dashboard page"""
     st.subheader("📊 REAL-TIME TOURISM DASHBOARD")
     
-    # Metrics row
+    # Metrics
     col1, col2, col3, col4 = st.columns(4)
     
     with col1:
@@ -432,13 +399,8 @@ def show_dashboard():
         st.subheader("📈 VISITOR FLOW")
         realtime_data = generate_realtime_data()
         
-        fig = px.line(realtime_data, x='timestamp', y='visitor_flow',
-                     title="Real-time Visitor Analytics")
-        fig.update_layout(
-            paper_bgcolor='rgba(0,0,0,0)', 
-            plot_bgcolor='rgba(0,0,0,0)', 
-            font_color='#66ff99'
-        )
+        fig = px.line(realtime_data, x='timestamp', y='visitor_flow', title="Real-time Analytics")
+        fig.update_layout(paper_bgcolor='rgba(0,0,0,0)', plot_bgcolor='rgba(0,0,0,0)', font_color='#66ff99')
         fig.update_traces(line_color='#00ff88', line_width=3)
         st.plotly_chart(fig, use_container_width=True)
     
@@ -446,18 +408,10 @@ def show_dashboard():
         st.subheader("🗺️ PERFORMANCE MATRIX")
         location_data = generate_tourism_data()
         
-        fig = px.scatter(location_data, 
-                        x='sustainability_score', 
-                        y='satisfaction_score', 
-                        size='monthly_visitors',
-                        color='carbon_footprint',
-                        hover_name='location',
-                        title="Sustainability vs Satisfaction")
-        fig.update_layout(
-            paper_bgcolor='rgba(0,0,0,0)', 
-            plot_bgcolor='rgba(0,0,0,0)', 
-            font_color='#66ff99'
-        )
+        fig = px.scatter(location_data, x='sustainability_score', y='satisfaction_score', 
+                        size='monthly_visitors', color='carbon_footprint',
+                        hover_name='location', title="Sustainability vs Satisfaction")
+        fig.update_layout(paper_bgcolor='rgba(0,0,0,0)', plot_bgcolor='rgba(0,0,0,0)', font_color='#66ff99')
         st.plotly_chart(fig, use_container_width=True)
 
 def show_ai_chat():
@@ -465,7 +419,7 @@ def show_ai_chat():
     st.subheader("🤖 AI TOURISM ASSISTANT")
     
     # Chat interface
-    user_query = st.text_input("💭 Ask about sustainable tourism strategies:")
+    user_query = st.text_input("💭 Ask about sustainable tourism:")
     
     col1, col2 = st.columns([1, 4])
     with col1:
@@ -474,11 +428,11 @@ def show_ai_chat():
     if send_button and user_query:
         st.markdown(f"**🧑 You:** {user_query}")
         
-        with st.spinner("🧠 AI Processing..."):
-            ai_response = get_ai_response(user_query)
+        with st.spinner("🧠 Processing..."):
+            response = get_response(user_query)
         
         st.markdown("**🤖 AI Assistant:**")
-        st.markdown(ai_response)
+        st.markdown(response)
     
     # Quick actions
     st.subheader("⚡ INSTANT INSIGHTS")
@@ -486,42 +440,35 @@ def show_ai_chat():
     col1, col2, col3 = st.columns(3)
     
     with col1:
-        if st.button("📊 Analytics Report"):
-            response = get_ai_response("comprehensive analytics report")
+        if st.button("📊 Analytics"):
             st.success("📊 **Analytics Generated**")
-            st.markdown(response)
+            st.markdown(get_response("analytics report"))
     
     with col2:
-        if st.button("🎯 Strategy Plan"):
-            response = get_ai_response("green marketing strategy")
+        if st.button("🎯 Strategy"):
             st.success("🎯 **Strategy Ready**")
-            st.markdown(response)
+            st.markdown(get_response("marketing strategy"))
     
     with col3:
-        if st.button("🌱 Sustainability Audit"):
-            response = get_ai_response("sustainability assessment")
+        if st.button("🌱 Audit"):
             st.success("🌱 **Audit Complete**")
-            st.markdown(response)
+            st.markdown(get_response("sustainability audit"))
 
 def show_image_analysis():
     """Image analysis page"""
     st.subheader("📸 AI IMAGE ANALYSIS")
     
-    uploaded_file = st.file_uploader(
-        "Upload tourism location image", 
-        type=['jpg', 'jpeg', 'png'],
-        help="Upload images of tourism locations for AI analysis"
-    )
+    uploaded_file = st.file_uploader("Upload image", type=['jpg', 'jpeg', 'png'])
     
-    if uploaded_file is not None:
+    if uploaded_file:
         col1, col2 = st.columns([1, 1])
         
         with col1:
             st.image(uploaded_file, caption="Uploaded Image", use_column_width=True)
         
         with col2:
-            with st.spinner("🔍 Analyzing image..."):
-                analysis = analyze_uploaded_image(uploaded_file)
+            with st.spinner("🔍 Analyzing..."):
+                analysis = analyze_image(uploaded_file)
             
             if analysis['success']:
                 st.markdown('<div class="analysis-box">', unsafe_allow_html=True)
@@ -533,9 +480,9 @@ def show_image_analysis():
                 st.write(f"• **Quality:** {info['quality']}")
                 
                 result = analysis['analysis']
-                st.write(f"• **Location Type:** {result['location_type']}")
-                st.write(f"• **Tourism Potential:** {result['tourism_potential']:.1f}/10")
-                st.write(f"• **Sustainability Score:** {result['sustainability_score']:.1f}/10")
+                st.write(f"• **Type:** {result['type']}")
+                st.write(f"• **Tourism Potential:** {result['potential']:.1f}/10")
+                st.write(f"• **Sustainability:** {result['sustainability']:.1f}/10")
                 
                 st.markdown("**💡 Recommendations:**")
                 for i, rec in enumerate(result['recommendations'], 1):
@@ -549,62 +496,48 @@ def show_analytics():
     """Analytics page"""
     st.subheader("📊 ANALYTICS CENTER")
     
-    location_data = generate_tourism_data()
+    data = generate_tourism_data()
     
     col1, col2 = st.columns(2)
     
     with col1:
-        fig = px.bar(location_data, 
-                    x='location', 
-                    y='monthly_revenue', 
-                    color='sustainability_score',
-                    title="Revenue vs Sustainability")
-        fig.update_layout(
-            paper_bgcolor='rgba(0,0,0,0)', 
-            plot_bgcolor='rgba(0,0,0,0)', 
-            font_color='#66ff99',
-            xaxis_tickangle=45
-        )
+        fig = px.bar(data, x='location', y='monthly_revenue', 
+                    color='sustainability_score', title="Revenue vs Sustainability")
+        fig.update_layout(paper_bgcolor='rgba(0,0,0,0)', plot_bgcolor='rgba(0,0,0,0)', 
+                         font_color='#66ff99', xaxis_tickangle=45)
         st.plotly_chart(fig, use_container_width=True)
     
     with col2:
-        fig = px.pie(location_data, 
-                    values='monthly_visitors', 
-                    names='location', 
-                    title="Visitor Distribution")
-        fig.update_layout(
-            paper_bgcolor='rgba(0,0,0,0)', 
-            font_color='#66ff99'
-        )
+        fig = px.pie(data, values='monthly_visitors', names='location', title="Visitor Distribution")
+        fig.update_layout(paper_bgcolor='rgba(0,0,0,0)', font_color='#66ff99')
         st.plotly_chart(fig, use_container_width=True)
 
 def show_scenarios():
-    """Scenario planning page"""
+    """Scenario planning"""
     st.subheader("🎮 SCENARIO PLANNING")
     
     col1, col2 = st.columns([1, 2])
     
     with col1:
         st.markdown("### 🎛️ PARAMETERS")
-        visitor_growth = st.slider("📈 Visitor Growth (%)", -20, 50, 25)
-        sustainability_invest = st.slider("🌱 Sustainability Investment", 1, 10, 8)
-        marketing_budget = st.slider("📢 Marketing Budget ($K)", 100, 500, 300)
+        growth = st.slider("📈 Visitor Growth (%)", -20, 50, 25)
+        invest = st.slider("🌱 Sustainability Investment", 1, 10, 8)
+        budget = st.slider("📢 Marketing Budget ($K)", 100, 500, 300)
         
         if st.button("🚀 RUN SIMULATION"):
-            # Calculate results
-            revenue_impact = 100 + (visitor_growth * 0.8) + (marketing_budget * 0.05)
-            sustainability_score = 8 + (sustainability_invest * 0.2)
-            satisfaction_score = 8.5 + (sustainability_invest * 0.15)
+            revenue = 100 + (growth * 0.8) + (budget * 0.05)
+            sustainability = 8 + (invest * 0.2)
+            satisfaction = 8.5 + (invest * 0.15)
             
-            st.session_state.sim_results = {
-                'revenue': min(150, max(80, revenue_impact)),
-                'sustainability': min(10, sustainability_score),
-                'satisfaction': min(10, satisfaction_score)
+            st.session_state.results = {
+                'revenue': min(150, max(80, revenue)),
+                'sustainability': min(10, sustainability),
+                'satisfaction': min(10, satisfaction)
             }
     
     with col2:
-        if hasattr(st.session_state, 'sim_results'):
-            results = st.session_state.sim_results
+        if hasattr(st.session_state, 'results'):
+            results = st.session_state.results
             
             st.success("🎯 **SIMULATION COMPLETE**")
             
@@ -616,10 +549,10 @@ def show_scenarios():
             with col_b:
                 st.metric("😊 Satisfaction", f"{results['satisfaction']:.1f}/10")
                 overall = (results['sustainability'] + results['satisfaction']) / 2
-                st.metric("🏆 Overall Score", f"{overall:.1f}/10")
+                st.metric("🏆 Overall", f"{overall:.1f}/10")
 
 def show_sustainability():
-    """Sustainability page"""
+    """Sustainability center"""
     st.subheader("🌍 SUSTAINABILITY CENTER")
     
     # Metrics
@@ -669,16 +602,19 @@ def show_sustainability():
 
 # Footer
 def show_footer():
-    """Application footer"""
+    """Footer"""
     st.markdown("---")
     timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     
     st.markdown(f"""
-    <div style="text-align: center; padding: 1rem; background: rgba(0,50,35,0.8); border-radius: 10px; border: 1px solid #66ff99;">
-        <p style="color: #66ff99; font-family: 'Orbitron', monospace;">
-            <strong>STATUS:</strong> All Systems Operational • <strong>UPTIME:</strong> 99.9% • <strong>UPDATED:</strong> {timestamp}
+    <div style="text-align: center; padding: 1rem; background: rgba(0,50,35,0.6); 
+                border-radius: 10px; border: 1px solid #66ff99; margin-top: 2rem;">
+        <p style="color: #66ff99; font-family: 'Orbitron', monospace; margin: 0;">
+            <strong>STATUS:</strong> All Systems Operational • 
+            <strong>UPTIME:</strong> 99.9% • 
+            <strong>UPDATED:</strong> {timestamp}
         </p>
-        <p style="color: #99ffaa; font-size: 0.9rem;">
+        <p style="color: #99ffaa; font-size: 0.85rem; margin: 0.5rem 0 0 0;">
             🌱 Powered by AI • Built for Sustainable Future • Ready for Global Impact 🌱
         </p>
     </div>
