@@ -3,56 +3,35 @@ __pycache__/
 *.py[cod]
 *$py.class
 *.so
-.Python
 build/
-develop-eggs/
 dist/
-downloads/
-eggs/
-.eggs/
-lib/
-lib64/
-parts/
-sdist/
-var/
-wheels/
 *.egg-info/
-.installed.cfg
-*.egg
 
 # Virtual environments
 venv/
 env/
-ENV/
 smart-tourism/
 
 # IDE
 .vscode/
 .idea/
 *.swp
-*.swo
 
-# OS files
+# OS
 .DS_Store
 Thumbs.db
 
-# Streamlit
+# Streamlit secrets
 .streamlit/secrets.toml
 
 # API keys
 *.key
 secrets.py
-config.ini
 
 # Logs
 *.log
 logs/
 
 # Cache
-.cache/
 cache/
-
-# Data files
-*.csv
-*.xlsx
-*.db
+.cache/
