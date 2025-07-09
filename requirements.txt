@@ -1,12 +1,6 @@
-# Core dependencies - versi yang sangat stabil
 streamlit==1.28.0
 pandas==2.0.3
 numpy==1.23.5
 plotly==5.15.0
 requests==2.31.0
-
-# Image processing - versi ringan
 Pillow==9.5.0
-
-# Utilities minimal
-python-dateutil==2.8.2
