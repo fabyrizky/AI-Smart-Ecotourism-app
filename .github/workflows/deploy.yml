@@ -3,8 +3,6 @@ name: Deploy to Streamlit Cloud
 on:
   push:
     branches: [ main ]
-  pull_request:
-    branches: [ main ]
 
 jobs:
   test:
@@ -23,24 +21,13 @@ jobs:
         python -m pip install --upgrade pip
         pip install -r requirements.txt
     
-    - name: Run basic tests
+    - name: Basic validation
       run: |
-        python -c "import streamlit; print('Streamlit OK')"
-        python -c "import pandas; print('Pandas OK')"
-        python -c "import plotly; print('Plotly OK')"
+        python -c "import streamlit; print('✅ Streamlit OK')"
+        python -c "import pandas; print('✅ Pandas OK')"
+        python -c "import plotly; print('✅ Plotly OK')"
     
     - name: Validate main app
       run: |
         python -m py_compile main-app.py
-        echo "App compilation successful"
-
-  deploy:
-    needs: test
-    runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/main'
-    
-    steps:
-    - name: Deploy notification
-      run: |
-        echo "Deployment to Streamlit Cloud triggered"
-        echo "Check https://share.streamlit.io for deployment status"
+        echo "✅ App compilation successful"
